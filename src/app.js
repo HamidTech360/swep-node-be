@@ -22,6 +22,10 @@ mongoose.connect(DATABASE_URL, {
 
 app.set('port', 3000)
 
+app.post('/webhook', (req, res) => {
+  console.log('result', res)
+})
+
 app.use('/users', userRouter)
 
 app.get('/', (req, res) => {
