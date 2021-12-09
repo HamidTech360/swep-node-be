@@ -64,7 +64,8 @@ exports.authUser = async (req, res, next) => {
 
 exports.getResetCode = async (req, res, next)=>{
   const {error} = Validate(req.body)
-  if(error) return res.status(400).send(error.details[0].message)
+  // if(error) return res.status(400).send(error.details[0].message)
+  if(error) throw new APIError ("400", error.details[0].message )
   
   try{
       let transporter = nodemailer.createTransport({
@@ -89,10 +90,11 @@ exports.getResetCode = async (req, res, next)=>{
 
       transporter.sendMail(mailOptions, async function(err, data){
         if(err){
-          res.status(500).json({
-            status:'failed',
-            message:'Failed to send email. Please try again'
-          })
+          // res.status(500).json({
+          //   status:'failed',
+          //   message:'Failed to send email. Please try again'
+          // })
+          throw new APIError("500", "failed to send email> please try again")
         }else{
           const newToken = new TokenModel({
               regNo:req.body.regNo,
@@ -100,19 +102,22 @@ exports.getResetCode = async (req, res, next)=>{
               email:req.body.email
           })
           const saveToken = await newToken.save()
-          res.status(200).json({
-            status:'success',
-            message:'Email has been sent to you. Please check your email',
-            data:{
-              ...saveToken
-            }
-          })
+          // res.status(200).json({
+          //   status:'success',
+          //   message:'Email has been sent to you. Please check your email',
+          //   data:{
+          //     ...saveToken
+          //   }
+          // })
+          return responseHandler(res, 200, "Email sent");
+
         }
       })
   }catch(ex){
-    return res.status(500).json({
-      message:'Something failed . Internal server error'
-    })
+    throw new APIError("500", "Something failed . Internal server error")
+    // return res.status(500).json({
+    //   message:'Something failed . Internal server error'
+    // })
   }
 }
 
@@ -123,9 +128,8 @@ exports.verifyToken = async (req, res, next)=>{
         .find({token: req.body.token, email:req.body.email})
         .select({token:1, email:1, regNo:1})
 
-      if(checkToken.length < 1) return res.status(400).json({
-          message:'Invalid token supplied'
-      })
+      if(checkToken.length < 1) throw new APIError ("403", "Invalid token supplied")
+      
 
       const latestToken = checkToken[checkToken.length-1]
       const payload = {
@@ -135,14 +139,19 @@ exports.verifyToken = async (req, res, next)=>{
       }
       const auth_token =  jwt.sign(payload, config.JWT_SECRET)
 
-      res.status(200).json({
-        message:'Token has been verified',
-         auth_token: auth_token,
+      // res.status(200).json({
+      //   message:'Token has been verified',
+      //    auth_token: auth_token,
+      //   data:payload
+      // })
+      return responseHandler(res, 200, "Token verified", {
+        auth_token:auth_token,
         data:payload
-      })
+      });
       
   }catch(ex){
       // res.status(500)
+      throw new APIError ("500", "something failed")
   }
 }
 
@@ -155,11 +164,14 @@ exports.ResetPassword = async (req, res, next)=>{
         { password:hashedPassword},
         {new:true}
     )
-    res.json({success:true,message:'Password successfully updated'})
+
+    return responseHandler(res, 200, "password successfully updated")
+    // res.json({success:true,message:'Password successfully updated'})
 
   }catch(ex){
-    return res.status(500).json({
-      message:ex.message
-    })
+    // return res.status(500).json({
+    //   message:ex.message
+    // })
+    throw new APIError("500", "something failed")
   }
 }
