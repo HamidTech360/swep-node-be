@@ -1,7 +1,7 @@
 {
   "name": "swep-be",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node JS Backend for SWEP Project for group 9",
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
@@ -16,11 +16,21 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi": "^17.4.2",
+    "joi-browser": "^13.4.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
-    "mongoose": "^6.0.13"
+    "mongoose": "^6.0.13",
+    "nodemailer": "^6.7.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HamidTech360/swep-node-be.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HamidTech360/swep-node-be/issues"
+  },
+  "homepage": "https://github.com/HamidTech360/swep-node-be#readme"
 }
