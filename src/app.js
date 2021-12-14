@@ -25,7 +25,6 @@ app.post('/webhook', (req, res) => {
 })
 
 app.use('/users', userRouter)
-app.use('/stage_one_vps', stageOneVpRouter)
 
 app.get('/', (req, res) => {
   return res.send('Hello world')

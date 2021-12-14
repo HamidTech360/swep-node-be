@@ -13,5 +13,5 @@ router.post('/auth', validator(authBodySchema), authUser )
 router.post('/resetpassword',auth,  ResetPassword )
 router.post('/verify_code', verifyToken )
 router.post('/send_code', getResetCode )
-router.use('/stage_one_vp', auth,stageOneVpRouter  )
+router.use('/stage_one_vp', stageOneVpRouter  )
 module.exports = router
