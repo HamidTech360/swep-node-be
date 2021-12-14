@@ -12,7 +12,7 @@ module.exports = (() => {
   return {
       DATABASE_URL: "mongodb://localhost:27017/swep-db",
       JWT_SECRET: "evruyvryeyryevruer",
-      PORT: 3000,
+      PORT: 6000,
       EMAIL:'owolabihammed2001@gmail.com',
       PASSWORD:'olalekan2019...'
     }

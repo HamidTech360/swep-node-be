@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { handleError } = require('./util/error_handler')
-const { DATABASE_URL } = require('../src/config')
+const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
+const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
 
 
 // initialise express app
@@ -19,14 +20,12 @@ mongoose.connect(DATABASE_URL, {
 })
 
 
-
-app.set('port', 3000)
-
 app.post('/webhook', (req, res) => {
   console.log('result', res)
 })
 
 app.use('/users', userRouter)
+app.use('/stage_one_vps', stageOneVpRouter)
 
 app.get('/', (req, res) => {
   return res.send('Hello world')

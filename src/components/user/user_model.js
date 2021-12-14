@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
+
+  role: {
+    type: String,
+    enum: ['doctor', 'user', 'admin' ]
+  }
+
 });
 
 userSchema.methods.toJSON = function () {
@@ -59,6 +65,8 @@ userSchema.methods.generateToken = function () {
     firstName: user.firstName,
     lastName: user.lastName,
     regNo: user.registrationNumber,
+    userId: user._id,
+    role: user.role
   };
   return new Promise((resolve, reject) => {
     jwt.sign(
@@ -66,7 +74,7 @@ userSchema.methods.generateToken = function () {
       config.JWT_SECRET,
       {
         // expiresIn: '600000'
-        expiresIn: "1800000",
+        expiresIn: "180000000",
       },
       (err, token) => {
         if (err) {
