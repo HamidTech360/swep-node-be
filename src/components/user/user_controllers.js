@@ -27,7 +27,7 @@ exports.createUser = async (req, res, next) => {
       req.body);
 
     // check if user with regNO alreay exists
-    const existingUser = await userModel.find({ registrationNumber });
+    const existingUser = await userModel.findOne({ registrationNumber });
     if( existingUser ){
       throw new APIError(409, 'User with this registeration number already exists')
     }
