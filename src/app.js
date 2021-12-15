@@ -4,12 +4,15 @@ const { handleError } = require('./util/error_handler')
 const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
 const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
-
+const cors = requrie('cors')
 
 // initialise express app
 const app = express()
 app.use(express.json())
 
+
+
+app.use(cors())
 
 mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true
