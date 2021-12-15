@@ -4,7 +4,7 @@ const { handleError } = require('./util/error_handler')
 const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
 const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
-const cors = requrie('cors')
+const cors = require('cors')
 
 // initialise express app
 const app = express()
