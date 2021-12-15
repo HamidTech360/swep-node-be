@@ -7,6 +7,10 @@ exports.getProfile = async (req, res, next) => {
   try {
 
     const { userId } = req.user
+    const { Id } = req.params
+    if (Id != userId){
+      throw new APIError(403, 'Not allowed')
+    }
     const vp = await stageOneVp.findOne({ user: userId}).populate('user');
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
@@ -21,7 +25,12 @@ exports.getProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   try {
+    
     const { userId } = req.user
+    const { Id } = req.params
+    if (Id != userId){
+      throw new APIError(403, 'Not allowed')
+    }
     const update = req.body
     const vp = await stageOneVp.findOneAndUpdate({ user: userId}, update );
     if (!vp){
@@ -49,6 +58,10 @@ exports.getAllProfiles = async (req, res, next) => {
 exports.submitProfile = async( req, res, next ) => {
   try {
     const { userId } = req.user
+    const { Id } = req.params
+    if (Id != userId){
+      throw new APIError(403, 'Not allowed')
+    }
     const update = req.body
     update.status = 'in review'
     const vp = await stageOneVp.findOneAndUpdate({ user: userId}, update );
@@ -63,13 +76,13 @@ exports.submitProfile = async( req, res, next ) => {
 
 exports.acceptProfile = async (req, res, next) => {
   try {
-    const { userId } = req.user
+    const { Id: userId } = req.params
     const profile = await stageOneVp.findOne({ user: userId})
     if (!profile){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'complete'})
-    return responseHandler(res, 200, 'Accepted verification profile', { profile })
+    return responseHandler(res, 200, 'Accepted verification profile')
   } catch(err){
     return next(err)
   }
@@ -78,14 +91,14 @@ exports.acceptProfile = async (req, res, next) => {
 
 exports.declineProfile = async (req, res, next) => {
   try {
-    const { userId } = req.user
+    const { Id: userId } = req.params
     const { comments } = req.body
     const profile = await stageOneVp.findOne({ user: userId})
     if (!profile){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'declined', $push: { comments: comments }})
-    return responseHandler(res, 200, 'Accepted verification profile', { profile })
+    return responseHandler(res, 200, 'Declined verification profile')
   } catch(err){
     return next(err)
   }

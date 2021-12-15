@@ -22,8 +22,15 @@ exports.getAllUsers = async (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
   try {
+
     const userData = ({ firstName, lastName, password, registrationNumber } =
       req.body);
+
+    // check if user with regNO alreay exists
+    const existingUser = await userModel.find({ registrationNumber });
+    if( existingUser ){
+      throw new APIError(409, 'User with this registeration number already exists')
+    }
 
     let user = new userModel(userData);
     //TODO: create a stage one and stage 2 vp

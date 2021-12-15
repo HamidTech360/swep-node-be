@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   registrationNumber: {
     type: String,
     trim: true,
+    required: true,
     unique: true,
     index: true,
   },
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema({
 
   role: {
     type: String,
+    default: 'user',
     enum: ['doctor', 'user', 'admin' ]
   }
 

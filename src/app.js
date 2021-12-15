@@ -13,8 +13,19 @@ app.use(express.json())
 
 mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true
-}).then(() => {
+}).then(async () => {
   console.log('Connected to mongo db')
+  const userModel =  mongoose.model('User')
+  const admin = await userModel.findOne({ registrationNumber: 'general'});
+  if (!admin){
+    await mongoose.model('User').create({
+      firstName: 'swep',
+      lastName: 'admin',
+      role: 'admin',
+      password: 'password',
+      registrationNumber: 'general'
+    })
+  }
 }).catch((err) => {
   console.log('COuld not connect to mongo db', err)
 })
