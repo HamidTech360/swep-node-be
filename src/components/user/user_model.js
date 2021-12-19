@@ -35,6 +35,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'user',
     enum: ['doctor', 'user', 'admin' ]
+  },
+
+  health_center_id: {
+    type: String,
+    trim: true
   }
 
 });

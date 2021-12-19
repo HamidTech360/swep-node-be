@@ -1,6 +1,8 @@
 const stageOneVp = require('./stage_one_vp.model');
+const UserModel = require('../user/user_model');
 const responseHandler = require("../../util/response_handler");
 const { APIError } = require("../../util/error_handler");
+const { nanoid } = require('nanoid')
 
 
 exports.getProfile = async (req, res, next) => {
@@ -82,6 +84,7 @@ exports.acceptProfile = async (req, res, next) => {
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'complete'})
+    await UserModel.updateOne({ id: userId }, { health_center_id: 'HC-' + nanoid(5)} )
     return responseHandler(res, 200, 'Accepted verification profile')
   } catch(err){
     return next(err)
@@ -97,7 +100,7 @@ exports.declineProfile = async (req, res, next) => {
     if (!profile){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
-    await profile.update({ status: 'declined', $push: { comments: comments }})
+    await profile.update({ status: 'declined', comments: comments });
     return responseHandler(res, 200, 'Declined verification profile')
   } catch(err){
     return next(err)
