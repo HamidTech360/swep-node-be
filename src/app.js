@@ -3,10 +3,13 @@ const mongoose = require('mongoose')
 const { handleError } = require('./util/error_handler')
 const { DATABASE_URL } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
+const doctorRouter = require('../src/components/admin/doctor_router')
+const cors = require('cors')
 
 
 // initialise express app
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 
@@ -23,6 +26,7 @@ mongoose.connect(DATABASE_URL, {
 app.set('port', 3000)
 
 app.use('/users', userRouter)
+app.use('/doctors', doctorRouter)
 
 app.get('/', (req, res) => {
   return res.send('Hello world')

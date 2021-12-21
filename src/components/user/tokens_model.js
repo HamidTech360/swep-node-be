@@ -19,18 +19,6 @@ const tokenSchema = new mongoose.Schema({
     }
 })
 
-// tokenSchema.methods.getJWT= async function (){
-//     const user = this;
-//     const payload = {
-//         token: user.token,
-//         email: user.email,
-//         regNo:user.regNo
-//     }
-
-//     return await jwt.sign(payload, config.JWT_SECRET)
-
-
-// }
 
 function Validate (user){
     const schema = {
