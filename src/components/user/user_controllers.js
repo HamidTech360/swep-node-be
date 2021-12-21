@@ -1,6 +1,6 @@
 const userModel = require("./user_model");
 const stageOneVpModel = require('../stage_one_vp/stage_one_vp.model')
-const stageTwoVpModel = require('../stage_two_vp/stege_two_vp.model')
+const stageTwoVpModel = require('../stage_two_vp/stage_two_vp.model')
 const responseHandler = require("../../util/response_handler");
 const { APIError } = require("../../util/error_handler");
 const {TokenModel, Validate} = require('./tokens_model')

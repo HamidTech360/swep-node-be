@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const stage_two_vp = new mongoose.Schema({
   status: {
     type: String,
-    enum: ['incomplete', 'review', 'completed'],
+    enum: ['incomplete', 'in review', 'declined', 'complete'],
     default: 'incomplete'
   },
 
