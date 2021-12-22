@@ -1,4 +1,6 @@
 const userModel = require("./user_model");
+const stageOneVpModel = require('../stage_one_vp/stage_one_vp.model')
+const stageTwoVpModel = require('../stage_two_vp/stege_two_vp.model')
 const responseHandler = require("../../util/response_handler");
 const { APIError } = require("../../util/error_handler");
 const {TokenModel, Validate} = require('./tokens_model')
@@ -23,8 +25,15 @@ exports.createUser = async (req, res, next) => {
     const userData = ({ firstName, lastName, password, registrationNumber } =
       req.body);
 
-    const user = new userModel(userData);
-    await user.save();
+    let user = new userModel(userData);
+    //TODO: create a stage one and stage 2 vp
+    user = await user.save();
+    const userStageOneVp = await stageOneVpModel.create([{
+      user: user._id
+    }])
+    const userStageTwoVp = await stageTwoVpModel.create([{
+      user: user._id
+    }])
     return responseHandler(res, 201, "Created user", { user });
   } catch (err) {
     return next(err);
@@ -64,7 +73,6 @@ exports.authUser = async (req, res, next) => {
 
 exports.getResetCode = async (req, res, next)=>{
   const {error} = Validate(req.body)
-  // if(error) return res.status(400).send(error.details[0].message)
   if(error) throw new APIError ("400", error.details[0].message )
   
   try{
@@ -105,8 +113,7 @@ exports.getResetCode = async (req, res, next)=>{
         }
       })
   }catch(ex){
-    return next(ex);
-
+    return next(ex)
   }
 }
 
@@ -128,15 +135,13 @@ exports.verifyToken = async (req, res, next)=>{
       }
       const auth_token =  jwt.sign(payload, config.JWT_SECRET)
 
-  
       return responseHandler(res, 200, "Token verified", {
         auth_token:auth_token,
         data:payload
       });
       
   }catch(ex){
-      // res.status(500)
-      return next(ex);
+     return next(ex)
   }
 }
 
@@ -151,12 +156,10 @@ exports.ResetPassword = async (req, res, next)=>{
     )
 
     return responseHandler(res, 200, "password successfully updated")
-    // res.json({success:true,message:'Password successfully updated'})
 
   }catch(ex){
-    // return res.status(500).json({
-    //   message:ex.message
-    // })
+   
     return next(ex);
+  
   }
 }

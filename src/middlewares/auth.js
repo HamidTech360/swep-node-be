@@ -14,4 +14,18 @@ function auth (req, res, next){
     }
 }
 
-module.exports = auth
+function authRole(role){
+  return (req, res, next) => {
+    try {
+      const user = req.user;
+      if(!user) return res.status(403).send('Not allowed')
+      if(user.role != role) return res.status(403).send('Not allowed')
+      return next()
+    } catch(err){
+      return res.status(403).send('Not allowed')
+    }
+  }
+}
+module.exports = {  
+  auth, 
+  authRole }

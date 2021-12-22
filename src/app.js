@@ -1,10 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { handleError } = require('./util/error_handler')
-const { DATABASE_URL } = require('../src/config')
+const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
 const doctorRouter = require('../src/components/admin/doctor_router')
 const cors = require('cors')
+const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
 
 
 // initialise express app
@@ -22,8 +23,9 @@ mongoose.connect(DATABASE_URL, {
 })
 
 
-
-app.set('port', 3000)
+app.post('/webhook', (req, res) => {
+  console.log('result', res)
+})
 
 app.use('/users', userRouter)
 app.use('/doctors', doctorRouter)
