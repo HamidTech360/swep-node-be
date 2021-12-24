@@ -83,8 +83,11 @@ exports.acceptProfile = async (req, res, next) => {
     if (!profile){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
+    const hcid = 'HC-' + nanoid(5)
+    console.log('hcid', hcid)
     await profile.update({ status: 'complete'})
-    await UserModel.updateOne({ id: userId }, { health_center_id: 'HC-' + nanoid(5)} )
+    const result = await UserModel.updateOne({ id: userId }, { health_center_id: hcid } )
+    console.log('result', result);
     return responseHandler(res, 200, 'Accepted verification profile')
   } catch(err){
     return next(err)
