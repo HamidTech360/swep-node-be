@@ -86,7 +86,7 @@ exports.acceptProfile = async (req, res, next) => {
     const hcid = 'HC-' + nanoid(5)
     console.log('hcid', hcid)
     await profile.update({ status: 'complete'})
-    const result = await UserModel.updateOne({ id: userId }, { health_center_id: hcid } )
+    const result = await UserModel.updateOne({ id: userId }, { $set: { health_center_id: hcid }} )
     console.log('result', result);
     return responseHandler(res, 200, 'Accepted verification profile')
   } catch(err){
