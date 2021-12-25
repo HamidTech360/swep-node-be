@@ -10,22 +10,26 @@ const stage_two_vp = new mongoose.Schema({
 
   eye_test_result: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   ecg_test_result: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   urine_test_result: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   hermatology_test_result: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   comments: [{

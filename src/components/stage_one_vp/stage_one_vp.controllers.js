@@ -34,11 +34,13 @@ exports.updateProfile = async (req, res, next) => {
       throw new APIError(403, 'Not allowed')
     }
     const update = req.body
-    const vp = await stageOneVp.findOneAndUpdate({ user: userId}, update );
+    const vp = await stageOneVp.findOneAndUpdate({ user: userId}, update, {
+      new: true
+    } );
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
-    return responseHandler(res, 200, 'Updated Profile')
+    return responseHandler(res, 200, 'Updated Profile', { profile: vp })
   } catch(err){
     return next(err)
   }
@@ -86,9 +88,11 @@ exports.acceptProfile = async (req, res, next) => {
     const hcid = 'HC-' + nanoid(5)
     console.log('hcid', hcid)
     await profile.update({ status: 'complete'})
-    const result = await UserModel.updateOne({ id: userId }, { $set: { health_center_id: hcid }} )
-    console.log('result', result);
-    return responseHandler(res, 200, 'Accepted verification profile')
+    const user = await UserModel.findOneAndUpdate({ _id: userId }, { health_center_id: hcid }, {
+      new: true
+    })
+    console.log('result', user);
+    return responseHandler(res, 200, 'Accepted verification profile', { user })
   } catch(err){
     return next(err)
   }
@@ -104,7 +108,7 @@ exports.declineProfile = async (req, res, next) => {
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'declined', comments: comments });
-    return responseHandler(res, 200, 'Declined verification profile')
+    return responseHandler(res, 200, 'Declined verification profile', { profile })
   } catch(err){
     return next(err)
   }

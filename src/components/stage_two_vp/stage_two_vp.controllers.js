@@ -38,7 +38,7 @@ exports.updateProfile = async (req, res, next) => {
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
-    return responseHandler(res, 200, 'Updated Profile')
+    return responseHandler(res, 200, 'Updated Profile', { profile: vp })
   } catch(err){
     return next(err)
   }
@@ -101,7 +101,7 @@ exports.declineProfile = async (req, res, next) => {
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
     await profile.update({ status: 'declined', comments: comments });
-    return responseHandler(res, 200, 'Declined verification profile')
+    return responseHandler(res, 200, 'Declined verification profile', { profile })
   } catch(err){
     return next(err)
   }

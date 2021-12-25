@@ -39,7 +39,8 @@ const userSchema = new mongoose.Schema({
 
   health_center_id: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   }
 
 });
