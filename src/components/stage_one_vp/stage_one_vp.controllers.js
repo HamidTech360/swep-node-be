@@ -10,7 +10,7 @@ exports.getProfile = async (req, res, next) => {
 
     const { userId } = req.user
     const { Id } = req.params
-    const vp = await stageOneVp.findOne({ user: userId}).populate('user');
+    const vp = await stageOneVp.findOne({ user: Id}).populate('user');
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
