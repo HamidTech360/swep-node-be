@@ -10,9 +10,6 @@ exports.getProfile = async (req, res, next) => {
 
     const { userId } = req.user
     const { Id } = req.params
-    if (Id != userId){
-      throw new APIError(403, 'Not allowed')
-    }
     const vp = await stageOneVp.findOne({ user: userId}).populate('user');
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
