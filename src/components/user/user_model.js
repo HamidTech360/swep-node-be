@@ -16,6 +16,13 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
 
+  email: {
+    type: String,
+    trim: true,
+    unique: true,
+    required: true
+  },
+
   registrationNumber: {
     type: String,
     trim: true,
@@ -69,6 +76,7 @@ userSchema.methods.comparePassword = async function (password) {
 userSchema.methods.generateToken = function () {
   const user = this;
   const payload = {
+    email: user.email,
     matricNo: user.matricNumber,
     firstName: user.firstName,
     lastName: user.lastName,

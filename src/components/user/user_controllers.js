@@ -23,13 +23,13 @@ exports.getAllUsers = async (req, res, next) => {
 exports.createUser = async (req, res, next) => {
   try {
 
-    const userData = ({ firstName, lastName, password, registrationNumber } =
+    const userData = ({ firstName, lastName, password, registrationNumber, email } =
       req.body);
 
     // check if user with regNO alreay exists
-    const existingUser = await userModel.findOne({ registrationNumber });
+    const existingUser = await userModel.findOne({ $or: [{ registrationNumber }, { email }] });
     if( existingUser ){
-      throw new APIError(409, 'User with this registeration number already exists')
+      throw new APIError(409, 'User with this registeration number or email already exists')
     }
 
     let user = new userModel(userData);
