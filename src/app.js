@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const { handleError } = require('./util/error_handler')
 const { DATABASE_URL, PORT } = require('../src/config')
 const userRouter = require('../src/components/user/user_router')
+const emergencyRouter = require('../src/components/emergency/emergency.routes')
 const stageOneVpRouter = require('../src/components/stage_one_vp/stage_one_vp.routes')
 const cors = require('cors')
 
@@ -24,6 +25,7 @@ mongoose.connect(DATABASE_URL, {
     await mongoose.model('User').create({
       firstName: 'swep',
       lastName: 'admin',
+      email: 'omilosamuel@gmail.com',
       role: 'admin',
       password: 'password',
       registrationNumber: 'general'
@@ -33,12 +35,8 @@ mongoose.connect(DATABASE_URL, {
   console.log('COuld not connect to mongo db', err)
 })
 
-
-app.post('/webhook', (req, res) => {
-  console.log('result', res)
-})
-
 app.use('/users', userRouter)
+app.use('/emergencies', emergencyRouter )
 
 app.get('/', (req, res) => {
   return res.send('Hello world')

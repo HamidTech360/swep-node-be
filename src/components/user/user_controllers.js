@@ -116,6 +116,7 @@ exports.getResetCode = async (req, res, next)=>{
               token:code,
               email:req.body.email
           })
+          console.log('data', data)
           const saveToken = await newToken.save()
           // res.status(200).json({
           //   status:'success',
