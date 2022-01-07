@@ -110,3 +110,13 @@ exports.declineProfile = async (req, res, next) => {
     return next(err)
   }
 }
+exports.getStats = async ( req, res, next) => {
+  try {
+    const stats = await stageOneVp.aggregate().group({ _id: '$status', number_of_students: { $sum: 1 }});
+    return res.send({
+      stats
+    })
+  } catch(err){
+    return next(err)
+  }
+}

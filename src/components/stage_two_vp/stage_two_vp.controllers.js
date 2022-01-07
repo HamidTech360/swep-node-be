@@ -101,5 +101,15 @@ exports.declineProfile = async (req, res, next) => {
     return responseHandler(res, 200, 'Declined verification profile', { profile })
   } catch(err){
     return next(err)
-  }
+  } 
 }
+
+exports.getStats = async ( req, res, next) => {
+  try {
+    const stats = await stageTwoVp.aggregate().group({ _id: '$status', number_of_students: { $sum: 1 }});
+    return res.send({
+      stats
+    })
+  } catch(err){
+    return next(err)
+}};
