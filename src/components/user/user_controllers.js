@@ -82,7 +82,15 @@ exports.getResetCode = async (req, res, next)=>{
   const {error} = Validate(req.body)
   if(error) throw new APIError ("400", error.details[0].message )
   
+  const checkEmail = await userModel.findOne({email:req.body.email})
+  if(!checkEmail) return res.status(403).send('Email not verified')
+  
+  
+ 
   try{
+
+      
+    
       let transporter = nodemailer.createTransport({
         service:'gmail',
         auth:{
