@@ -9,17 +9,20 @@ const stage_one_vp = new mongoose.Schema({
 
   health_center_bio_data: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   clearance_certificate: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   passport: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
 
   comments: [{

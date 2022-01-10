@@ -16,9 +16,17 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
 
+  email: {
+    type: String,
+    trim: true,
+    unique: true,
+    required: true
+  },
+
   registrationNumber: {
     type: String,
     trim: true,
+    required: true,
     unique: true,
     index: true,
   },
@@ -32,7 +40,14 @@ const userSchema = new mongoose.Schema({
 
   role: {
     type: String,
+    default: 'user',
     enum: ['doctor', 'user', 'admin' ]
+  },
+
+  health_center_id: {
+    type: String,
+    trim: true,
+    default: ''
   }
 
 });
@@ -61,6 +76,7 @@ userSchema.methods.comparePassword = async function (password) {
 userSchema.methods.generateToken = function () {
   const user = this;
   const payload = {
+    email: user.email,
     matricNo: user.matricNumber,
     firstName: user.firstName,
     lastName: user.lastName,

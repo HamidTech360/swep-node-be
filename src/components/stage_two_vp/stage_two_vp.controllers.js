@@ -1,4 +1,4 @@
-const stageOneVp = require('./stage_one_vp.model');
+const stageTwoVp = require('./stage_two_vp.model');
 const UserModel = require('../user/user_model');
 const responseHandler = require("../../util/response_handler");
 const { APIError } = require("../../util/error_handler");
@@ -10,7 +10,7 @@ exports.getProfile = async (req, res, next) => {
 
     const { userId } = req.user
     const { Id } = req.params
-    const vp = await stageOneVp.findOne({ user: Id}).populate('user');
+    const vp = await stageTwoVp.findOne({ user: Id}).populate('user');
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
@@ -31,9 +31,7 @@ exports.updateProfile = async (req, res, next) => {
       throw new APIError(403, 'Not allowed')
     }
     const update = req.body
-    const vp = await stageOneVp.findOneAndUpdate({ user: userId}, update, {
-      new: true
-    } );
+    const vp = await stageTwoVp.findOneAndUpdate({ user: userId}, update );
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
@@ -49,7 +47,7 @@ exports.getAllProfiles = async (req, res, next) => {
     let { status } = req.query
     status = ['incomplete', 'inreview', 'declined', 'complete'].includes(status) ? status : null
     const query = status ? { status } : {}
-    const profiles = await stageOneVp.find(query).populate('user')
+    const profiles = await stageTwoVp.find(query).populate('user')
     return responseHandler(res, 200, 'All profiles', { profiles })
   } catch(err){
     return next(err)
@@ -65,7 +63,7 @@ exports.submitProfile = async( req, res, next ) => {
     }
     const update = req.body
     update.status = 'in review'
-    const vp = await stageOneVp.findOneAndUpdate({ user: userId}, update );
+    const vp = await stageTwoVp.findOneAndUpdate({ user: userId}, update );
     if (!vp){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
@@ -78,18 +76,13 @@ exports.submitProfile = async( req, res, next ) => {
 exports.acceptProfile = async (req, res, next) => {
   try {
     const { Id: userId } = req.params
-    const profile = await stageOneVp.findOne({ user: userId})
+    const profile = await stageTwoVp.findOne({ user: userId})
     if (!profile){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
-    const hcid = 'HC-' + nanoid(5)
-    console.log('hcid', hcid)
     await profile.update({ status: 'complete'})
-    const user = await UserModel.findOneAndUpdate({ _id: userId }, { health_center_id: hcid }, {
-      new: true
-    })
-    console.log('result', user);
-    return responseHandler(res, 200, 'Accepted verification profile', { user })
+    // await UserModel.updateOne({ id: userId }, { health_center_id: 'HC-' + nanoid(5)} )
+    return responseHandler(res, 200, 'Accepted verification profile')
   } catch(err){
     return next(err)
   }
@@ -100,7 +93,7 @@ exports.declineProfile = async (req, res, next) => {
   try {
     const { Id: userId } = req.params
     const { comments } = req.body
-    const profile = await stageOneVp.findOne({ user: userId})
+    const profile = await stageTwoVp.findOne({ user: userId})
     if (!profile){
       throw new APIError(404, 'User does not have a verification profile for step one')
     }
@@ -108,15 +101,15 @@ exports.declineProfile = async (req, res, next) => {
     return responseHandler(res, 200, 'Declined verification profile', { profile })
   } catch(err){
     return next(err)
-  }
+  } 
 }
+
 exports.getStats = async ( req, res, next) => {
   try {
-    const stats = await stageOneVp.aggregate().group({ _id: '$status', number_of_students: { $sum: 1 }});
+    const stats = await stageTwoVp.aggregate().group({ _id: '$status', number_of_students: { $sum: 1 }});
     return res.send({
       stats
     })
   } catch(err){
     return next(err)
-  }
-}
+}};

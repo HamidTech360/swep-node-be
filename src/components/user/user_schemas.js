@@ -7,6 +7,7 @@ exports.createUserBodySchema = joi
     lastName: joi.string().required(),
     password: joi.string().required().min(6),
     registrationNumber: joi.string().required(),
+    email: joi.string().email().required()
   })
   .unknown(true);
 

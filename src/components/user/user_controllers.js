@@ -1,6 +1,6 @@
 const userModel = require("./user_model");
 const stageOneVpModel = require('../stage_one_vp/stage_one_vp.model')
-const stageTwoVpModel = require('../stage_two_vp/stege_two_vp.model')
+const stageTwoVpModel = require('../stage_two_vp/stage_two_vp.model')
 const responseHandler = require("../../util/response_handler");
 const { APIError } = require("../../util/error_handler");
 const {TokenModel, Validate} = require('./tokens_model')
@@ -22,8 +22,15 @@ exports.getAllUsers = async (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
   try {
-    const userData = ({ firstName, lastName, password, registrationNumber } =
+
+    const userData = ({ firstName, lastName, password, registrationNumber, email } =
       req.body);
+
+    // check if user with regNO alreay exists
+    const existingUser = await userModel.findOne({ $or: [{ registrationNumber }, { email }] });
+    if( existingUser ){
+      throw new APIError(409, 'User with this registeration number or email already exists')
+    }
 
     let user = new userModel(userData);
     //TODO: create a stage one and stage 2 vp
@@ -106,6 +113,7 @@ exports.getResetCode = async (req, res, next)=>{
               token:code,
               email:req.body.email
           })
+          console.log('data', data)
           const saveToken = await newToken.save()
    
           return responseHandler(res, 200, "Email sent");
